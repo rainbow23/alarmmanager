@@ -48,6 +48,76 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
         })
 
+        setExactAndAllowWhileIdleToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
+            val toastMessage = if (isChecked) {
+                val calendar: Calendar = Calendar.getInstance().apply {
+                    timeInMillis = System.currentTimeMillis()
+                    set(Calendar.HOUR_OF_DAY, 21)
+                    set(Calendar.MINUTE, 27)
+                }
+
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent)
+                "setExactAndAllowWhileIdleToggle Alarm On"
+            } else {
+                alarmManager.cancel(pendingIntent)
+                "setExactAndAllowWhileIdleToggle Alarm Off"
+            }
+            Log.d(TAG, toastMessage)
+            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
+        })
+
+        setExactToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
+            val toastMessage = if (isChecked) {
+                val calendar: Calendar = Calendar.getInstance().apply {
+                    timeInMillis = System.currentTimeMillis()
+                    set(Calendar.HOUR_OF_DAY, 21)
+                    set(Calendar.MINUTE, 34)
+                }
+
+                //2022-01-04 21:30:07.838 21164-21164/com.codechacha.alarmmanager D/AlarmReceiver: Received intent : Intent { flg=0x14 cmp=com.codechacha.alarmmanager/.AlarmReceiver (has extras) }
+                //2022-01-04 21:32:00.906 21429-21429/com.codechacha.alarmmanager D/AlarmReceiver: Received intent : Intent { flg=0x14 cmp=com.codechacha.alarmmanager/.AlarmReceiver (has extras) }
+                //2022-01-04 21:34:40.594 22075-22075/com.codechacha.alarmmanager D/AlarmReceiver: Received intent : Intent { flg=0x14 cmp=com.codechacha.alarmmanager/.AlarmReceiver (has extras) }
+
+
+
+
+                alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent)
+                "setExact Alarm On"
+            } else {
+                alarmManager.cancel(pendingIntent)
+                "setExact Alarm Off"
+            }
+            Log.d(TAG, toastMessage)
+            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
+        })
+
+        setAlarmClockToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
+            val toastMessage = if (isChecked) {
+                val calendar: Calendar = Calendar.getInstance().apply {
+                    timeInMillis = System.currentTimeMillis()
+                    set(Calendar.HOUR_OF_DAY, 22)
+                    set(Calendar.MINUTE, 2)
+                }
+
+                val info = AlarmManager.AlarmClockInfo(calendar.timeInMillis, null)
+                alarmManager.setAlarmClock(info, pendingIntent)
+
+                "setAlarmClock Alarm On"
+            } else {
+                alarmManager.cancel(pendingIntent)
+                "setAlarmClock Alarm Off"
+            }
+            Log.d(TAG, toastMessage)
+            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
+            //2022-01-04 22:02:23.383 27046-27046/com.codechacha.alarmmanager D/AlarmReceiver: Received intent : Intent { flg=0x14 cmp=com.codechacha.alarmmanager/.AlarmReceiver (has extras) }
+        })
+
         periodicAlarmToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
             val toastMessage: String = if (isChecked) {
                 val repeatInterval: Long = AlarmManager.INTERVAL_FIFTEEN_MINUTES
@@ -84,7 +154,7 @@ class MainActivity : AppCompatActivity() {
 
         realtimePeriodicAlarmToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
             val toastMessage: String = if (isChecked) {
-                val repeatInterval: Long = 15 * 60 * 1000 // 15min
+                val repeatInterval: Long = 5 * 60 * 1000 // 15min
                 val calendar: Calendar = Calendar.getInstance().apply {
                     timeInMillis = System.currentTimeMillis()
                     set(Calendar.HOUR_OF_DAY, 20)
@@ -105,5 +175,4 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
-
 }

@@ -15,6 +15,27 @@
         android:textOn="onetime alarm on" />
 
     <ToggleButton
+        android:id="@+id/setExactAndAllowWhileIdleToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="setExactAndAllowWhileIdle alarm off"
+        android:textOn="setExactAndAllowWhileIdle alarm on" />
+
+    <ToggleButton
+        android:id="@+id/setExactToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="setExact alarm off"
+        android:textOn="setExact alarm on" />
+
+    <ToggleButton
+        android:id="@+id/setAlarmClockToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="setAlarmClock alarm off"
+        android:textOn="setAlarmClock alarm on" />
+
+    <ToggleButton
         android:id="@+id/periodicAlarmToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
