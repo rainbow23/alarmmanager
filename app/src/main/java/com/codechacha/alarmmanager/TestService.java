@@ -44,60 +44,38 @@ public class TestService extends Service  {
         fileReadWrite.writeFile();
 
         int requestCode = intent.getIntExtra("REQUEST_CODE",requestCodeValue);
+        Intent contentIntent = new Intent(context, MainActivity.class);
+        contentIntent.putExtra("Alarm", true);
+        //contentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         String channelId = "default";
         String title = context.getString(R.string.app_name);
 
-        Intent contentIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentPendingIntent = PendingIntent.getActivity(
-                context,
-                NOTIFICATION_ID,
-                contentIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        );
-
         PendingIntent pendingIntent = PendingIntent.getActivity(
-//                context, requestCode, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                context,
+                requestCode,
+                //NOTIFICATION_ID,
+                contentIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // ForegroundにするためNotificationが必要、Contextを設定
-        NotificationManager notificationManager =
-                (NotificationManager)context.
-                        getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Notification　Channel 設定
-        NotificationChannel channel = new NotificationChannel(
-                channelId, title , NotificationManager.IMPORTANCE_HIGH);
-        channel.setDescription("Silent Notification");
-        // 通知音を消さないと毎回通知音が出てしまう
-        // この辺りの設定はcleanにしてから変更
-        channel.setSound(null,null);
-        // 通知ランプを消す
-        channel.enableLights(false);
-        channel.setLightColor(Color.BLUE);
-        // 通知バイブレーション無し
-        channel.enableVibration(false);
-
-        if(notificationManager != null){
-            notificationManager.createNotificationChannel(channel);
-            Notification notification = new Notification.Builder(context, channelId)
-                    .setContentTitle(title)
-                    // android標準アイコンから
-                    .setSmallIcon(android.R.drawable.btn_star)
-                    .setContentText("Alarm Counter TestService1")
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
+        createNotificationChannel();
+        Notification notification = new Notification.Builder(context, PRIMARY_CHANNEL_ID)
+                .setContentTitle(title)
+                // android標準アイコンから
+                .setSmallIcon(android.R.drawable.btn_star)
+                .setContentText("Alarm Counter TestService1")
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
 //                    .setContentIntent(contentPendingIntent)
-                    .setWhen(System.currentTimeMillis())
-                    .build();
+                .setWhen(System.currentTimeMillis())
+                .build();
 
-            //notificationManager.notify(requestCode, notification);
-            notificationManager.notify(requestCodeValue, notification);
-            //notificationManager.notify(NOTIFICATION_ID, notification);
+        //notificationManager.notify(requestCode, notification);
+//            notificationManager.notify(requestCodeValue, notification);
+        notificationManager.notify(NOTIFICATION_ID, notification);
 
-            // startForeground
-            startForeground(1, notification);
-        }
+        // startForeground
+        startForeground(1, notification);
 
         // 毎回Alarmを設定する
         setNextAlarmService(context);
@@ -107,12 +85,31 @@ public class TestService extends Service  {
         //return START_REDELIVER_INTENT;
     }
 
+    private void deliverNotification(Context context) {
+        Intent contentIntent = new Intent(context, MainActivity.class);
+        PendingIntent contentPendingIntent = PendingIntent.getActivity(
+                context,
+                NOTIFICATION_ID,
+                contentIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_alarm)
+                        .setContentTitle("Alert")
+                        .setContentText("This is repeating alarm")
+                        .setContentIntent(contentPendingIntent)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true)
+                        .setDefaults(NotificationCompat.DEFAULT_ALL);
+
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+
     // 次のアラームの設定
     private void setNextAlarmService(Context context){
         Log.d(TAG, "setNextAlarmService");
 
-//        createNotificationChannel();
-//        deliverNotification(context);
         long repeatPeriod = 1*60*1000;
 
         Intent intent = new Intent(context, TestService.class);
@@ -156,27 +153,6 @@ public class TestService extends Service  {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    private void deliverNotification(Context context) {
-        Intent contentIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentPendingIntent = PendingIntent.getActivity(
-                context,
-                NOTIFICATION_ID,
-                contentIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        );
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_alarm)
-                        .setContentTitle("Alert")
-                        .setContentText("This is repeating alarm")
-                        .setContentIntent(contentPendingIntent)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setAutoCancel(true)
-                        .setDefaults(NotificationCompat.DEFAULT_ALL);
-
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     private void createNotificationChannel() {

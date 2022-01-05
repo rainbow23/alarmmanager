@@ -23,20 +23,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate")
         setContentView(R.layout.activity_main)
+
+        val fromNotification = intent.extras?.getBoolean("Alarm")
+        Log.d(TAG, "onCreate fromNotification = $fromNotification")
+        if(fromNotification == false || fromNotification == null) {
+            val intent1 = Intent(this, TestService::class.java)
+            // Serviceの開始
+            startForegroundService(intent1)
+        }
+
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-
-        val intent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
-                    this, AlarmReceiver.NOTIFICATION_ID, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val intent1 = Intent(this, TestService::class.java)
-        // Serviceの開始
-        startForegroundService(intent1)
-
-//        val intent2 = Intent(this, TestService2::class.java)
-//        startForegroundService(intent2)
+            this, AlarmReceiver.NOTIFICATION_ID, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT)
 
         onetimeAlarmToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
             val toastMessage = if (isChecked) {
