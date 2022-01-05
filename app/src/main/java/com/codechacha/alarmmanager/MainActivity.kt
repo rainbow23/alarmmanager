@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-import android.R
 import android.view.View
 
 
@@ -32,11 +31,12 @@ class MainActivity : AppCompatActivity() {
                     this, AlarmReceiver.NOTIFICATION_ID, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
 
-//        startForeGroundBtn.setOnClickListener {
-            val intent2 = Intent(this, TestService::class.java)
-            // Serviceの開始
-            startForegroundService(intent2)
-//        }
+        val intent1 = Intent(this, TestService::class.java)
+        // Serviceの開始
+        startForegroundService(intent1)
+
+//        val intent2 = Intent(this, TestService2::class.java)
+//        startForegroundService(intent2)
 
         onetimeAlarmToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
             val toastMessage = if (isChecked) {

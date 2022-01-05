@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <service android:name=".TestService" />
+        <service android:name=".TestService2" />
 
         <receiver android:name=".AlarmReceiver"
             android:exported="false">
