@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             }
             Log.d(TAG, toastMessage)
             Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
+            AlarmReceiver.changetitle()
         })
 
         periodicAlarmToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
@@ -84,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
         realtimePeriodicAlarmToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
             val toastMessage: String = if (isChecked) {
-                val repeatInterval: Long = 15 * 60 * 1000 // 15min
+                val repeatInterval: Long = 1 * 60 * 1000 // 15min
                 val calendar: Calendar = Calendar.getInstance().apply {
                     timeInMillis = System.currentTimeMillis()
                     set(Calendar.HOUR_OF_DAY, 20)

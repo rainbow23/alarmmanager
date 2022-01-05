@@ -1,5 +1,6 @@
 package com.codechacha.alarmmanager
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -20,16 +21,26 @@ class AlarmReceiver : BroadcastReceiver() {
         const val TAG = "AlarmReceiver"
         const val NOTIFICATION_ID = 0
         const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
+        var builder: NotificationCompat.Builder? = null
+        var notificationManager: NotificationManager? = null
+
+        fun changetitle() {
+            builder?.setContentTitle("AAAAAAAAAAA")
+            builder?.setContentText("BBBBBBBBBBB")
+            notificationManager?.notify(NOTIFICATION_ID, builder!!.build())
+        }
     }
 
-    lateinit var notificationManager: NotificationManager
+    var count = 1
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "Received intent : $intent")
+
         notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         createNotificationChannel()
         deliverNotification(context)
+        count++
     }
 
     private fun deliverNotification(context: Context) {
@@ -40,18 +51,26 @@ class AlarmReceiver : BroadcastReceiver() {
             contentIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val builder =
-            NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_alarm)
-                .setContentTitle("Alert")
-                .setContentText("This is repeating alarm")
-                .setContentIntent(contentPendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
+        if(count == 1) {
+            builder =
+                NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_alarm)
+                    .setContentTitle("Alert")
+                    .setContentText("This is repeating alarm")
+                    .setContentIntent(contentPendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setAutoCancel(true)
+                    .setDefaults(NotificationCompat.DEFAULT_ALL)
 
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
+            notificationManager?.notify(NOTIFICATION_ID, builder!!.build())
+        } else {
+            builder?.setContentTitle("AAAAAAAAAAA")
+            builder?.setContentText("BBBBBBBBBBB")
+            notificationManager?.notify(NOTIFICATION_ID, builder!!.build())
+        }
     }
+
+
 
     fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -64,7 +83,7 @@ class AlarmReceiver : BroadcastReceiver() {
             notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(true)
             notificationChannel.description = "AlarmManager Tests"
-            notificationManager.createNotificationChannel(notificationChannel)
+            notificationManager?.createNotificationChannel(notificationChannel)
         }
     }
 }
