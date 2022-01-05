@@ -48,9 +48,6 @@ public class TestService extends Service  {
         contentIntent.putExtra("Alarm", true);
         //contentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        String channelId = "default";
-        String title = context.getString(R.string.app_name);
-
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,
                 requestCode,
@@ -59,6 +56,7 @@ public class TestService extends Service  {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         createNotificationChannel();
+        String title = context.getString(R.string.app_name);
         Notification notification = new Notification.Builder(context, PRIMARY_CHANNEL_ID)
                 .setContentTitle(title)
                 // android標準アイコンから
@@ -72,7 +70,7 @@ public class TestService extends Service  {
 
         //notificationManager.notify(requestCode, notification);
 //            notificationManager.notify(requestCodeValue, notification);
-        notificationManager.notify(NOTIFICATION_ID, notification);
+        //notificationManager.notify(NOTIFICATION_ID, notification);
 
         // startForeground
         startForeground(1, notification);
@@ -83,27 +81,6 @@ public class TestService extends Service  {
         return START_NOT_STICKY;
         //return START_STICKY;
         //return START_REDELIVER_INTENT;
-    }
-
-    private void deliverNotification(Context context) {
-        Intent contentIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentPendingIntent = PendingIntent.getActivity(
-                context,
-                NOTIFICATION_ID,
-                contentIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_alarm)
-                        .setContentTitle("Alert")
-                        .setContentText("This is repeating alarm")
-                        .setContentIntent(contentPendingIntent)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setAutoCancel(true)
-                        .setDefaults(NotificationCompat.DEFAULT_ALL);
-
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     // 次のアラームの設定
