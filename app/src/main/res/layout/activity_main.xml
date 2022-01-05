@@ -34,5 +34,10 @@
         android:layout_height="wrap_content"
         android:textOff="realtime periodic alarm off"
         android:textOn="realtime periodic alarm on" />
+    <Button
+        android:id="@+id/changeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="通知タイトルを変更する"/>
 
 </LinearLayout>

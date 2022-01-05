@@ -27,6 +27,7 @@ class AlarmReceiver : BroadcastReceiver() {
         fun changetitle() {
             builder?.setContentTitle("AAAAAAAAAAA")
             builder?.setContentText("BBBBBBBBBBB")
+//            builder?.setOnlyAlertOnce(true) // so when data is updated don't make sound and alert in android 8.0+
             notificationManager?.notify(NOTIFICATION_ID, builder!!.build())
         }
     }
@@ -51,23 +52,17 @@ class AlarmReceiver : BroadcastReceiver() {
             contentIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        if(count == 1) {
-            builder =
-                NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_alarm)
-                    .setContentTitle("Alert")
-                    .setContentText("This is repeating alarm")
-                    .setContentIntent(contentPendingIntent)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setAutoCancel(true)
-                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+        builder = NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_alarm)
+                .setContentTitle("Alert")
+                .setContentText("This is repeating alarm")
+                .setContentIntent(contentPendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOnlyAlertOnce(true) // so when data is updated don't make sound and alert in android 8.0+
+                .setAutoCancel(true)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
 
-            notificationManager?.notify(NOTIFICATION_ID, builder!!.build())
-        } else {
-            builder?.setContentTitle("AAAAAAAAAAA")
-            builder?.setContentText("BBBBBBBBBBB")
-            notificationManager?.notify(NOTIFICATION_ID, builder!!.build())
-        }
+        notificationManager?.notify(NOTIFICATION_ID, builder!!.build())
     }
 
 

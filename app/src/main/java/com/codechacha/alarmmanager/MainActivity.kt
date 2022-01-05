@@ -46,8 +46,13 @@ class MainActivity : AppCompatActivity() {
             }
             Log.d(TAG, toastMessage)
             Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
-            AlarmReceiver.changetitle()
         })
+
+
+        changeTitle.setOnClickListener {
+            Toast.makeText(this, "通知タイトルを変更する", Toast.LENGTH_SHORT).show()
+            AlarmReceiver.changetitle()
+        }
 
         periodicAlarmToggle.setOnCheckedChangeListener(OnCheckedChangeListener { _, isChecked ->
             val toastMessage: String = if (isChecked) {
